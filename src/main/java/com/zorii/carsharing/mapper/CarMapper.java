@@ -1,7 +1,7 @@
 package com.zorii.carsharing.mapper;
 
-import com.zorii.carsharing.dto.CarRequestDto;
-import com.zorii.carsharing.dto.CarResponseDto;
+import com.zorii.carsharing.dto.car.CarRequestDto;
+import com.zorii.carsharing.dto.car.CarResponseDto;
 import com.zorii.carsharing.model.Car;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

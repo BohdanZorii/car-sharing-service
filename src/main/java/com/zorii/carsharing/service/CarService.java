@@ -1,7 +1,7 @@
 package com.zorii.carsharing.service;
 
-import com.zorii.carsharing.dto.CarRequestDto;
-import com.zorii.carsharing.dto.CarResponseDto;
+import com.zorii.carsharing.dto.car.CarRequestDto;
+import com.zorii.carsharing.dto.car.CarResponseDto;
 import java.util.List;
 import java.util.UUID;
 

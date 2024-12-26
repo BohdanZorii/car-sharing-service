@@ -1,4 +1,4 @@
-package com.zorii.carsharing.dto;
+package com.zorii.carsharing.dto.car;
 
 import java.math.BigDecimal;
 import java.util.UUID;
