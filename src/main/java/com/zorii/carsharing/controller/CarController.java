@@ -1,11 +1,9 @@
 package com.zorii.carsharing.controller;
 
-import com.zorii.carsharing.dto.CarRequestDto;
-import com.zorii.carsharing.dto.CarResponseDto;
+import com.zorii.carsharing.dto.car.CarRequestDto;
+import com.zorii.carsharing.dto.car.CarResponseDto;
 import com.zorii.carsharing.service.CarService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -26,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("cars")
+@RequestMapping("/cars")
 @RequiredArgsConstructor
 public class CarController {
 
@@ -34,9 +32,7 @@ public class CarController {
 
   @Operation(summary = "Add a new car",
       responses = {
-          @ApiResponse(responseCode = "201", description = "Car created",
-              content = @Content(mediaType = "application/json",
-                  schema = @Schema(implementation = CarResponseDto.class))),
+          @ApiResponse(responseCode = "201", description = "Car created"),
           @ApiResponse(responseCode = "400", description = "Invalid request data")
       })
   @PostMapping
@@ -47,9 +43,7 @@ public class CarController {
 
   @Operation(summary = "Get all cars",
       responses = {
-          @ApiResponse(responseCode = "200", description = "List of cars",
-              content = @Content(mediaType = "application/json",
-                  schema = @Schema(implementation = CarResponseDto.class)))
+          @ApiResponse(responseCode = "200", description = "List of cars")
       })
   @GetMapping
   public ResponseEntity<List<CarResponseDto>> getAllCars() {
@@ -59,9 +53,7 @@ public class CarController {
 
   @Operation(summary = "Get a car by ID",
       responses = {
-          @ApiResponse(responseCode = "200", description = "Car found",
-              content = @Content(mediaType = "application/json",
-                  schema = @Schema(implementation = CarResponseDto.class))),
+          @ApiResponse(responseCode = "200", description = "Car found"),
           @ApiResponse(responseCode = "404", description = "Car not found")
       })
   @GetMapping("/{id}")
@@ -72,9 +64,7 @@ public class CarController {
 
   @Operation(summary = "Update a car by ID",
       responses = {
-          @ApiResponse(responseCode = "200", description = "Car updated",
-              content = @Content(mediaType = "application/json",
-                  schema = @Schema(implementation = CarResponseDto.class))),
+          @ApiResponse(responseCode = "200", description = "Car updated"),
           @ApiResponse(responseCode = "400", description = "Invalid request data"),
           @ApiResponse(responseCode = "404", description = "Car not found")
       })
@@ -87,9 +77,7 @@ public class CarController {
 
   @Operation(summary = "Update inventory for a car",
       responses = {
-          @ApiResponse(responseCode = "200", description = "Inventory updated",
-              content = @Content(mediaType = "application/json",
-                  schema = @Schema(implementation = CarResponseDto.class))),
+          @ApiResponse(responseCode = "200", description = "Inventory updated"),
           @ApiResponse(responseCode = "400", description = "Invalid inventory change value"),
           @ApiResponse(responseCode = "404", description = "Car not found")
       })

@@ -1,4 +1,4 @@
-package com.zorii.carsharing.dto;
+package com.zorii.carsharing.dto.car;
 
 import com.zorii.carsharing.validation.EnumValue;
 import jakarta.validation.constraints.NotBlank;

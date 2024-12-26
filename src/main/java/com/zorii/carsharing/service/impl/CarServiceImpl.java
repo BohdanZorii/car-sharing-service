@@ -1,7 +1,7 @@
 package com.zorii.carsharing.service.impl;
 
-import com.zorii.carsharing.dto.CarRequestDto;
-import com.zorii.carsharing.dto.CarResponseDto;
+import com.zorii.carsharing.dto.car.CarRequestDto;
+import com.zorii.carsharing.dto.car.CarResponseDto;
 import com.zorii.carsharing.mapper.CarMapper;
 import com.zorii.carsharing.model.Car;
 import com.zorii.carsharing.repository.CarRepository;
