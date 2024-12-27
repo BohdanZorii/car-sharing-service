@@ -27,7 +27,8 @@ public class AuthenticationController {
   @Operation(summary = "Register a new user",
       responses = {
           @ApiResponse(responseCode = "201", description = "User registered"),
-          @ApiResponse(responseCode = "400", description = "Invalid request data")
+          @ApiResponse(responseCode = "400", description = "Invalid request data"),
+          @ApiResponse(responseCode = "409", description = "Email in use")
       })
   @PostMapping("/registration")
   public ResponseEntity<UserResponseDto> registerUser(@Valid @RequestBody UserRegistrationDto dto) {
@@ -36,7 +37,11 @@ public class AuthenticationController {
   }
 
   @PostMapping("/login")
-  @Operation(summary = "User login", description = "Authenticates a user and returns a token.")
+  @Operation(summary = "Register a new user",
+      responses = {
+          @ApiResponse(responseCode = "200", description = "Login successful"),
+          @ApiResponse(responseCode = "400", description = "Invalid request data")
+      })
   public UserLoginResponseDto login(@RequestBody @Valid UserLoginRequestDto request) {
     return authenticationService.authenticate(request);
   }
