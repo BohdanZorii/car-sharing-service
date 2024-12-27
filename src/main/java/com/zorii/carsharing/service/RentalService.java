@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface RentalService {
 
-    RentalResponseDto createRental(RentalRequestDto rentalRequestDto, String userEmail);
+    RentalResponseDto addRental(RentalRequestDto rentalRequestDto, String userEmail);
 
     List<RentalResponseDto> getRentals(UUID userId, boolean isActive);
 

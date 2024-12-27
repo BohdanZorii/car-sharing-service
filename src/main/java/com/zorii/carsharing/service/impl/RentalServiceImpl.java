@@ -29,7 +29,7 @@ public class RentalServiceImpl implements RentalService {
 
     @Transactional
     @Override
-    public RentalResponseDto createRental(RentalRequestDto rentalRequestDto, String email) {
+    public RentalResponseDto addRental(RentalRequestDto rentalRequestDto, String email) {
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
