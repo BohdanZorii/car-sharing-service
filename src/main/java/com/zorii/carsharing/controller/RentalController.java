@@ -32,6 +32,7 @@ public class RentalController {
         responses = {
             @ApiResponse(responseCode = "201", description = "Rental created"),
             @ApiResponse(responseCode = "400", description = "Invalid request data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "Car or User not found"),
             @ApiResponse(responseCode = "409", description = "Car is not available")
         })
@@ -46,7 +47,9 @@ public class RentalController {
     @Operation(summary = "Get rentals by user ID and active status",
         responses = {
             @ApiResponse(responseCode = "200", description = "List of rentals"),
-            @ApiResponse(responseCode = "400", description = "Invalid query parameters")
+            @ApiResponse(responseCode = "400", description = "Invalid query parameters"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Access denied"),
         })
     @GetMapping
     public ResponseEntity<List<RentalResponseDto>> getRentals(
@@ -59,11 +62,15 @@ public class RentalController {
     @Operation(summary = "Get a rental by ID",
         responses = {
             @ApiResponse(responseCode = "200", description = "Rental found"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "Rental not found")
         })
     @GetMapping("/{id}")
-    public ResponseEntity<RentalResponseDto> getRental(@PathVariable UUID id) {
-        RentalResponseDto rental = rentalService.getRental(id);
+    public ResponseEntity<RentalResponseDto> getRental(
+        @PathVariable UUID id,
+        @AuthenticationPrincipal UserDetails userDetails) {
+        String email = userDetails.getUsername();
+        RentalResponseDto rental = rentalService.getRental(id, email);
         return ResponseEntity.ok(rental);
     }
 

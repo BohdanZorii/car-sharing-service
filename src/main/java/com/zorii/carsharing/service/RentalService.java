@@ -11,7 +11,7 @@ public interface RentalService {
 
     List<RentalResponseDto> getRentals(UUID userId, boolean isActive);
 
-    RentalResponseDto getRental(UUID rentalId);
+    RentalResponseDto getRental(UUID rentalId, String email);
 
     RentalResponseDto returnRental(UUID rentalId, String userEmail);
 }
