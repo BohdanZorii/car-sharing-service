@@ -57,8 +57,8 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    public RentalResponseDto getRental(UUID rentalId) {
-        Rental rental = rentalRepository.findById(rentalId)
+    public RentalResponseDto getRental(UUID rentalId, String email) {
+        Rental rental = rentalRepository.findByIdAndUserEmail(rentalId, email)
             .orElseThrow(() -> new EntityNotFoundException("Rental not found"));
         return rentalMapper.toResponseDto(rental);
     }

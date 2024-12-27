@@ -4,6 +4,7 @@ import com.zorii.carsharing.dto.user.RoleDto;
 import com.zorii.carsharing.dto.user.UserRegistrationDto;
 import com.zorii.carsharing.dto.user.UserResponseDto;
 import com.zorii.carsharing.dto.user.UserUpdateDto;
+import com.zorii.carsharing.exception.DuplicateEmailException;
 import com.zorii.carsharing.mapper.UserMapper;
 import com.zorii.carsharing.model.User;
 import com.zorii.carsharing.model.User.Role;
@@ -26,6 +27,9 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserResponseDto registerUser(UserRegistrationDto dto) {
+    if (userRepository.existsByEmail(dto.email())) {
+      throw new DuplicateEmailException("Email is already in use");
+    }
     User user = userMapper.toEntity(dto);
     user.setPassword(passwordEncoder.encode(dto.password()));
     User savedUser = userRepository.save(user);

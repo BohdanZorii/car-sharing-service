@@ -33,7 +33,9 @@ public class CarController {
   @Operation(summary = "Add a new car",
       responses = {
           @ApiResponse(responseCode = "201", description = "Car created"),
-          @ApiResponse(responseCode = "400", description = "Invalid request data")
+          @ApiResponse(responseCode = "400", description = "Invalid request data"),
+          @ApiResponse(responseCode = "401", description = "Unauthorized"),
+          @ApiResponse(responseCode = "403", description = "Access denied")
       })
   @PostMapping
   public ResponseEntity<CarResponseDto> addCar(@Valid @RequestBody CarRequestDto dto) {
@@ -66,6 +68,8 @@ public class CarController {
       responses = {
           @ApiResponse(responseCode = "200", description = "Car updated"),
           @ApiResponse(responseCode = "400", description = "Invalid request data"),
+          @ApiResponse(responseCode = "401", description = "Unauthorized"),
+          @ApiResponse(responseCode = "403", description = "Access denied"),
           @ApiResponse(responseCode = "404", description = "Car not found")
       })
   @PutMapping("/{id}")
@@ -79,6 +83,7 @@ public class CarController {
       responses = {
           @ApiResponse(responseCode = "200", description = "Inventory updated"),
           @ApiResponse(responseCode = "400", description = "Invalid inventory change value"),
+          @ApiResponse(responseCode = "401", description = "Unauthorized"),
           @ApiResponse(responseCode = "404", description = "Car not found")
       })
   @PatchMapping("/{id}/inventory")
@@ -92,6 +97,7 @@ public class CarController {
   @Operation(summary = "Delete a car by ID",
       responses = {
           @ApiResponse(responseCode = "204", description = "Car deleted"),
+          @ApiResponse(responseCode = "401", description = "Unauthorized"),
           @ApiResponse(responseCode = "404", description = "Car not found")
       })
   @DeleteMapping("/{id}")

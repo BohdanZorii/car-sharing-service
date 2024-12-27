@@ -6,13 +6,12 @@ import com.zorii.carsharing.dto.user.UserUpdateDto;
 import com.zorii.carsharing.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-@SecurityRequirement(name = "basicAuth") // Додає Basic Auth до всіх ендпоінтів у цьому контролері
 public class UserController {
 
   private final UserService userService;
@@ -36,8 +34,8 @@ public class UserController {
       }
   )
   @GetMapping("/me")
-  public ResponseEntity<UserResponseDto> getUserProfile() {
-    String email = getAuthenticatedUserEmail();
+  public ResponseEntity<UserResponseDto> getUserProfile(@AuthenticationPrincipal UserDetails userDetails) {
+    String email = userDetails.getUsername();
     UserResponseDto userProfile = userService.getUserProfile(email);
     return ResponseEntity.ok(userProfile);
   }
@@ -51,8 +49,10 @@ public class UserController {
       }
   )
   @PutMapping("/me")
-  public ResponseEntity<UserResponseDto> updateUserProfile(@Valid @RequestBody UserUpdateDto dto) {
-    String email = getAuthenticatedUserEmail();
+  public ResponseEntity<UserResponseDto> updateUserProfile(
+      @Valid @RequestBody UserUpdateDto dto,
+      @AuthenticationPrincipal UserDetails userDetails) {
+    String email = userDetails.getUsername();
     UserResponseDto updatedProfile = userService.updateUserProfile(email, dto);
     return ResponseEntity.ok(updatedProfile);
   }
@@ -62,8 +62,9 @@ public class UserController {
       responses = {
           @ApiResponse(responseCode = "200", description = "User role updated"),
           @ApiResponse(responseCode = "400", description = "Invalid request data"),
-          @ApiResponse(responseCode = "404", description = "User not found"),
-          @ApiResponse(responseCode = "401", description = "Unauthorized")
+          @ApiResponse(responseCode = "401", description = "Unauthorized"),
+          @ApiResponse(responseCode = "403", description = "Access denied"),
+          @ApiResponse(responseCode = "404", description = "User not found")
       }
   )
   @PutMapping("/{id}/role")
@@ -73,13 +74,5 @@ public class UserController {
   ) {
     UserResponseDto updatedUser = userService.updateUserRole(id, roleDto);
     return ResponseEntity.ok(updatedUser);
-  }
-
-  private String getAuthenticatedUserEmail() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication == null || !authentication.isAuthenticated()) {
-      throw new SecurityException("No authenticated user found");
-    }
-    return authentication.getName();
   }
 }
