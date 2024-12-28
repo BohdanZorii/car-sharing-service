@@ -1,6 +1,5 @@
 package com.zorii.carsharing.exception;
 
-import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.stream.Collectors;
 import org.springdoc.api.ErrorMessage;
@@ -11,7 +10,6 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
