@@ -12,6 +12,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -37,6 +38,7 @@ public class CarController {
           @ApiResponse(responseCode = "401", description = "Unauthorized"),
           @ApiResponse(responseCode = "403", description = "Access denied")
       })
+  @PreAuthorize("hasRole('MANAGER')")
   @PostMapping
   public ResponseEntity<CarResponseDto> addCar(@Valid @RequestBody CarRequestDto dto) {
     CarResponseDto createdCar = carService.addCar(dto);
@@ -72,6 +74,7 @@ public class CarController {
           @ApiResponse(responseCode = "403", description = "Access denied"),
           @ApiResponse(responseCode = "404", description = "Car not found")
       })
+  @PreAuthorize("hasRole('MANAGER')")
   @PutMapping("/{id}")
   public ResponseEntity<CarResponseDto> updateCar(@PathVariable UUID id,
       @Valid @RequestBody CarRequestDto dto) {
@@ -98,8 +101,10 @@ public class CarController {
       responses = {
           @ApiResponse(responseCode = "204", description = "Car deleted"),
           @ApiResponse(responseCode = "401", description = "Unauthorized"),
+          @ApiResponse(responseCode = "403", description = "Access denied"),
           @ApiResponse(responseCode = "404", description = "Car not found")
       })
+  @PreAuthorize("hasRole('MANAGER')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteCar(@PathVariable UUID id) {
     carService.deleteCar(id);
