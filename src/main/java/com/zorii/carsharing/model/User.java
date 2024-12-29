@@ -49,6 +49,8 @@ public class User implements UserDetails {
   @Size(min = 8, message = "Password must be at least 8 characters long")
   private String password;
 
+  private Long telegramChatId;
+
   @NotNull(message = "Role cannot be null")
   @Enumerated(EnumType.STRING)
   private Role role = Role.CUSTOMER;
