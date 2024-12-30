@@ -9,6 +9,7 @@ import com.zorii.carsharing.model.User;
 import com.zorii.carsharing.repository.CarRepository;
 import com.zorii.carsharing.repository.RentalRepository;
 import com.zorii.carsharing.repository.UserRepository;
+import com.zorii.carsharing.service.NotificationService;
 import com.zorii.carsharing.service.RentalService;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
@@ -26,6 +27,7 @@ public class RentalServiceImpl implements RentalService {
     private final CarRepository carRepository;
     private final UserRepository userRepository;
     private final RentalMapper rentalMapper;
+    private final NotificationService notificationService;
 
     @Transactional
     @Override
@@ -43,6 +45,12 @@ public class RentalServiceImpl implements RentalService {
         car.setInventory(car.getInventory() - 1);
         Rental rental = rentalMapper.toEntity(rentalRequestDto, user, car);
         Rental savedRental = rentalRepository.save(rental);
+
+        if (user.getTelegramChatId() != null) {
+            String rentalCreationMessage = buildCreationMessage(car, rental);
+            notificationService.sendNotification(rentalCreationMessage, user.getTelegramChatId());
+        }
+
         return rentalMapper.toResponseDto(savedRental);
     }
 
@@ -77,6 +85,33 @@ public class RentalServiceImpl implements RentalService {
         Car car = rental.getCar();
         car.setInventory(car.getInventory() + 1);
         Rental updatedRental = rentalRepository.save(rental);
+
+        Long userTelegramChatId = rental.getUser().getTelegramChatId();
+        if (userTelegramChatId != null) {
+            String rentalReturnMessage = buildReturnMessage(car, rental);
+            notificationService.sendNotification(rentalReturnMessage, userTelegramChatId);
+        }
+
         return rentalMapper.toResponseDto(updatedRental);
+    }
+
+    private String buildCreationMessage(Car car, Rental rental) {
+        return String.format(
+            """
+                Rental Created Successfully!
+                Car: %s %s
+                Rental Date: %s
+                Return Date: %s
+                Daily Fee: $%.2f""",
+            car.getBrand(), car.getModel(), rental.getRentalDate(), rental.getReturnDate(), car.getDailyFee());
+    }
+
+    private String buildReturnMessage(Car car, Rental rental) {
+        return String.format(
+            """
+                Rental Returned Successfully!
+                Car: %s %s
+                Return Date: %s""",
+            car.getBrand(), car.getModel(), rental.getActualReturnDate());
     }
 }
