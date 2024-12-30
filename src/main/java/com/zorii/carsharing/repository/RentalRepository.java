@@ -1,6 +1,7 @@
 package com.zorii.carsharing.repository;
 
 import com.zorii.carsharing.model.Rental;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,5 +16,7 @@ public interface RentalRepository extends JpaRepository<Rental, UUID> {
     List<Rental> findByUserIdAndActualReturnDateIsNotNull(UUID userId);
 
   Optional<Rental> findByIdAndUserEmail(UUID rentalId, String email);
+
+  List<Rental> findByReturnDateBeforeAndActualReturnDateIsNull(LocalDate today);
 }
 
