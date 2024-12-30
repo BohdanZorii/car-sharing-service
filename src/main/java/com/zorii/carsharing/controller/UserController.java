@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+@Validated
 public class UserController {
 
   private final UserService userService;
@@ -71,7 +73,7 @@ public class UserController {
   @PutMapping("/{id}/role")
   @PreAuthorize("hasRole('MANAGER')")
   public ResponseEntity<UserResponseDto> updateUserRole(
-      @PathVariable UUID id,
+      @org.hibernate.validator.constraints.UUID @PathVariable UUID id,
       @Valid @RequestBody RoleDto roleDto
   ) {
     UserResponseDto updatedUser = userService.updateUserRole(id, roleDto);
