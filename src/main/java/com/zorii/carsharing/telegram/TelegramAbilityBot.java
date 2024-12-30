@@ -14,6 +14,7 @@ import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.abilitybots.api.objects.Locality;
 import org.telegram.abilitybots.api.objects.Privacy;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
@@ -97,6 +98,16 @@ public class TelegramAbilityBot extends AbilityBot {
           silent.send("Current operation was canceled", ctx.chatId());
         })
         .build();
+  }
+
+  public void sendMessageToUser(String text, Long id) {
+    try {
+      SendMessage sendMessage = new SendMessage(id.toString(), text);
+      sendMessage.enableMarkdown(true);
+      execute(sendMessage);
+    } catch (TelegramApiException e) {
+      throw new NotificationException("Can`t send message to user with id: " + id, e);
+    }
   }
 
   @Override
