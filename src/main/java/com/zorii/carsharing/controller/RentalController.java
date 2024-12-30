@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/rentals")
 @RequiredArgsConstructor
+@Validated
 public class RentalController {
 
     private final RentalService rentalService;
@@ -55,7 +57,7 @@ public class RentalController {
     @PreAuthorize("hasRole('MANAGER')")
     @GetMapping
     public ResponseEntity<List<RentalResponseDto>> getRentals(
-        @RequestParam UUID userId,
+        @org.hibernate.validator.constraints.UUID @RequestParam UUID userId,
         @RequestParam(required = false) Boolean isActive) {
         List<RentalResponseDto> rentals = rentalService.getRentals(userId, isActive);
         return ResponseEntity.ok(rentals);
@@ -69,7 +71,7 @@ public class RentalController {
         })
     @GetMapping("/{id}")
     public ResponseEntity<RentalResponseDto> getRental(
-        @PathVariable UUID id,
+        @org.hibernate.validator.constraints.UUID @PathVariable UUID id,
         @AuthenticationPrincipal UserDetails userDetails) {
         String email = userDetails.getUsername();
         RentalResponseDto rental = rentalService.getRental(id, email);
@@ -85,7 +87,7 @@ public class RentalController {
         })
     @PostMapping("/return")
     public ResponseEntity<RentalResponseDto> returnRental(
-        @RequestParam UUID rentalId,
+        @org.hibernate.validator.constraints.UUID @RequestParam UUID rentalId,
         @AuthenticationPrincipal UserDetails userDetails) {
         RentalResponseDto rental = rentalService.returnRental(rentalId, userDetails.getUsername());
         return ResponseEntity.ok(rental);

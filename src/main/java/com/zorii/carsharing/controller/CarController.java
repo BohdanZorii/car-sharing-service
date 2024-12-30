@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/cars")
 @RequiredArgsConstructor
+@Validated
 public class CarController {
 
   private final CarService carService;
@@ -61,7 +63,7 @@ public class CarController {
           @ApiResponse(responseCode = "404", description = "Car not found")
       })
   @GetMapping("/{id}")
-  public ResponseEntity<CarResponseDto> getCarById(@PathVariable UUID id) {
+  public ResponseEntity<CarResponseDto> getCarById(@org.hibernate.validator.constraints.UUID @PathVariable UUID id) {
     CarResponseDto car = carService.getCarById(id);
     return ResponseEntity.ok(car);
   }
@@ -76,7 +78,7 @@ public class CarController {
       })
   @PreAuthorize("hasRole('MANAGER')")
   @PutMapping("/{id}")
-  public ResponseEntity<CarResponseDto> updateCar(@PathVariable UUID id,
+  public ResponseEntity<CarResponseDto> updateCar(@org.hibernate.validator.constraints.UUID @PathVariable UUID id,
       @Valid @RequestBody CarRequestDto dto) {
     CarResponseDto updatedCar = carService.updateCar(id, dto);
     return ResponseEntity.ok(updatedCar);
@@ -91,7 +93,7 @@ public class CarController {
       })
   @PatchMapping("/{id}/inventory")
   public ResponseEntity<CarResponseDto> updateInventory(
-      @PathVariable UUID id,
+      @org.hibernate.validator.constraints.UUID @PathVariable UUID id,
       @RequestParam @Min(value = 1, message = "Inventory change must be at least 1") int inventoryChange) {
     CarResponseDto updatedCar = carService.updateInventory(id, inventoryChange);
     return ResponseEntity.ok(updatedCar);
@@ -106,7 +108,7 @@ public class CarController {
       })
   @PreAuthorize("hasRole('MANAGER')")
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteCar(@PathVariable UUID id) {
+  public ResponseEntity<Void> deleteCar(@org.hibernate.validator.constraints.UUID @PathVariable UUID id) {
     carService.deleteCar(id);
     return ResponseEntity.noContent().build();
   }
