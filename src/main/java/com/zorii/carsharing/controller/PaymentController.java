@@ -7,6 +7,7 @@ import com.zorii.carsharing.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +56,7 @@ public class PaymentController {
           @ApiResponse(responseCode = "200", description = "Payment successfully processed")
       })
   @GetMapping("/success")
-  public ResponseEntity<String> handlePaymentSuccess(@RequestParam String sessionId) {
+  public ResponseEntity<String> handlePaymentSuccess(@RequestParam @NotBlank String sessionId) {
     paymentService.processSuccessfulPayment(sessionId);
     return ResponseEntity.ok("Payment successfully processed.");
   }
@@ -65,7 +66,7 @@ public class PaymentController {
           @ApiResponse(responseCode = "200", description = "Payment canceled message returned")
       })
   @GetMapping("/cancel")
-  public ResponseEntity<String> handlePaymentCancellation(@RequestParam String sessionId) {
+  public ResponseEntity<String> handlePaymentCancellation(@RequestParam @NotBlank String sessionId) {
     paymentService.handlePaymentCancellation(sessionId);
     return ResponseEntity.ok("Payment was canceled. Please try again if needed.");
   }

@@ -16,6 +16,7 @@ import com.zorii.carsharing.service.PaymentService;
 import com.zorii.carsharing.service.PriceCalculationService;
 import com.zorii.carsharing.service.RentalService;
 import com.zorii.carsharing.stripe.StripeService;
+import jakarta.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -60,12 +61,27 @@ public class PaymentServiceImpl implements PaymentService {
 
   @Override
   public void processSuccessfulPayment(String sessionId) {
+    Payment payment = getPaymentBySessionId(sessionId);
+    payment.setStatus(Payment.Status.PAID);
+    paymentRepository.save(payment);
 
+    Long userTelegramChatId = payment.getRental().getUser().getTelegramChatId();
+    if (userTelegramChatId != null) {
+      String carName = carService.getCarName(payment.getRental().getCar());
+      String message = String.format("Payment for %s car is successful.", carName);
+      notificationService.sendNotification(message, userTelegramChatId);
+    }
   }
 
   @Override
   public void handlePaymentCancellation(String sessionId) {
-
+    Payment payment = getPaymentBySessionId(sessionId);
+    Long userTelegramChatId = payment.getRental().getUser().getTelegramChatId();
+    if (userTelegramChatId != null) {
+      String carName = carService.getCarName(payment.getRental().getCar());
+      String message = String.format("Payment for %s car is canceled.", carName);
+      notificationService.sendNotification(message, userTelegramChatId);
+    }
   }
 
   private BigDecimal calculateAmountToPay(Rental rental, Payment.Type paymentType) {
@@ -84,7 +100,7 @@ public class PaymentServiceImpl implements PaymentService {
       PaymentRequestDto requestDto) {
     Type paymentType = Type.valueOf(requestDto.paymentType());
     String sessionId = session.getId();
-    URL sessionUrl = null;
+    URL sessionUrl;
     try {
       sessionUrl = new URL(session.getUrl());
     } catch (MalformedURLException e) {
@@ -93,7 +109,11 @@ public class PaymentServiceImpl implements PaymentService {
 
     Payment payment = paymentMapper.toEntity(paymentType, rental, sessionUrl, sessionId,
         amountToPay);
-    System.out.println(payment);
     return paymentRepository.save(payment);
+  }
+
+  private Payment getPaymentBySessionId(String sessionId) {
+    return paymentRepository.findBySessionId(sessionId)
+        .orElseThrow(() -> new EntityNotFoundException("Payment not found with session id " + sessionId));
   }
 }
