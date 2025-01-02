@@ -1,0 +1,70 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-cars
+      author: bohdan_zorii
+      changes:
+        - insert:
+            tableName: cars
+            columns:
+              - column:
+                  name: id
+                  value: "a0eebf39-7c9f-46d7-a372-b6a902d949d6"
+              - column:
+                  name: model
+                  value: "Model S"
+              - column:
+                  name: brand
+                  value: "Tesla"
+              - column:
+                  name: type
+                  value: "SEDAN"
+              - column:
+                  name: inventory
+                  value: "10"
+              - column:
+                  name: daily_fee
+                  value: "199.99"
+
+        - insert:
+            tableName: cars
+            columns:
+              - column:
+                  name: id
+                  value: "f759c722-c3db-4be2-8f1c-51dbcd8f3f8a"
+              - column:
+                  name: model
+                  value: "X5"
+              - column:
+                  name: brand
+                  value: "BMW"
+              - column:
+                  name: type
+                  value: "SUV"
+              - column:
+                  name: inventory
+                  value: "5"
+              - column:
+                  name: daily_fee
+                  value: "249.99"
+
+        - insert:
+            tableName: cars
+            columns:
+              - column:
+                  name: id
+                  value: "41a1fa24-9f73-4a2b-b3a5-5b1f99c9d41e"
+              - column:
+                  name: model
+                  value: "Civic"
+              - column:
+                  name: brand
+                  value: "Honda"
+              - column:
+                  name: type
+                  value: "SEDAN"
+              - column:
+                  name: inventory
+                  value: "8"
+              - column:
+                  name: daily_fee
+                  value: "149.99"

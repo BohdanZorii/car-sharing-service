@@ -17,13 +17,11 @@ import java.net.URL;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Table(name = "payments")
 @Getter
 @Setter
-@ToString
 public class Payment {
 
     @Id
