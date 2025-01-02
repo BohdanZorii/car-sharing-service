@@ -65,17 +65,23 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    public RentalResponseDto getRental(UUID rentalId, String email) {
-        Rental rental = rentalRepository.findByIdAndUserEmail(rentalId, email)
-            .orElseThrow(() -> new EntityNotFoundException("Rental not found"));
+    public RentalResponseDto getRental(UUID id, String email) {
+        Rental rental = rentalRepository.findByIdAndUserEmail(id, email)
+            .orElseThrow(() -> new EntityNotFoundException("Rental not found with id " + id));
         return rentalMapper.toResponseDto(rental);
     }
 
-    @Transactional
     @Override
-    public RentalResponseDto returnRental(UUID rentalId, String email) {
-        Rental rental = rentalRepository.findById(rentalId)
-            .orElseThrow(() -> new EntityNotFoundException("Rental not found"));
+    @Transactional(readOnly = true)
+    public Rental getRentalById(UUID id) {
+        return rentalRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Rental not found with id " + id));
+    }
+
+    @Override
+    @Transactional
+    public RentalResponseDto returnRental(UUID id, String email) {
+        Rental rental = getRentalById(id);
 
         if (rental.getActualReturnDate() != null) {
             throw new IllegalStateException("Rental has already been returned");

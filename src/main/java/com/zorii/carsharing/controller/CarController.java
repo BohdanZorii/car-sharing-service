@@ -63,7 +63,7 @@ public class CarController {
           @ApiResponse(responseCode = "404", description = "Car not found")
       })
   @GetMapping("/{id}")
-  public ResponseEntity<CarResponseDto> getCarById(@org.hibernate.validator.constraints.UUID @PathVariable UUID id) {
+  public ResponseEntity<CarResponseDto> getCarById(@PathVariable UUID id) {
     CarResponseDto car = carService.getCarById(id);
     return ResponseEntity.ok(car);
   }
@@ -78,7 +78,7 @@ public class CarController {
       })
   @PreAuthorize("hasRole('MANAGER')")
   @PutMapping("/{id}")
-  public ResponseEntity<CarResponseDto> updateCar(@org.hibernate.validator.constraints.UUID @PathVariable UUID id,
+  public ResponseEntity<CarResponseDto> updateCar(@PathVariable UUID id,
       @Valid @RequestBody CarRequestDto dto) {
     CarResponseDto updatedCar = carService.updateCar(id, dto);
     return ResponseEntity.ok(updatedCar);
@@ -93,7 +93,7 @@ public class CarController {
       })
   @PatchMapping("/{id}/inventory")
   public ResponseEntity<CarResponseDto> updateInventory(
-      @org.hibernate.validator.constraints.UUID @PathVariable UUID id,
+       @PathVariable UUID id,
       @RequestParam @Min(value = 1, message = "Inventory change must be at least 1") int inventoryChange) {
     CarResponseDto updatedCar = carService.updateInventory(id, inventoryChange);
     return ResponseEntity.ok(updatedCar);
@@ -108,7 +108,7 @@ public class CarController {
       })
   @PreAuthorize("hasRole('MANAGER')")
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteCar(@org.hibernate.validator.constraints.UUID @PathVariable UUID id) {
+  public ResponseEntity<Void> deleteCar(@PathVariable UUID id) {
     carService.deleteCar(id);
     return ResponseEntity.noContent().build();
   }

@@ -9,9 +9,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface CarMapper {
 
-  @Mapping(target = "type", expression = "java(Car.Type.valueOf(dto.type()))") // Convert String to Enum
+  @Mapping(target = "type", expression = "java(Car.Type.valueOf(dto.type()))")
   Car toEntity(CarRequestDto dto);
 
-  @Mapping(target = "type", expression = "java(car.getType().name())") // Convert Enum to String
   CarResponseDto toResponseDto(Car car);
 }
