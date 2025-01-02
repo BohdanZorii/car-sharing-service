@@ -73,7 +73,7 @@ public class UserController {
   @PutMapping("/{id}/role")
   @PreAuthorize("hasRole('MANAGER')")
   public ResponseEntity<UserResponseDto> updateUserRole(
-      @org.hibernate.validator.constraints.UUID @PathVariable UUID id,
+       @PathVariable UUID id,
       @Valid @RequestBody RoleDto roleDto
   ) {
     UserResponseDto updatedUser = userService.updateUserRole(id, roleDto);
