@@ -16,13 +16,11 @@ import java.math.BigDecimal;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Table(name = "cars")
 @Getter
 @Setter
-@ToString
 public class Car {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
