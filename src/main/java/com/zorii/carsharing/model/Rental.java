@@ -16,13 +16,11 @@ import java.time.LocalDate;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Table(name = "rentals")
 @Getter
 @Setter
-@ToString
 public class Rental {
 
   @Id

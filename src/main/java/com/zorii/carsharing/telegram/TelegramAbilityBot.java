@@ -31,12 +31,11 @@ public class TelegramAbilityBot extends AbilityBot {
     super(botConfig.getBotName(), botConfig.getBotToken());
     this.botConfig = botConfig;
     this.authenticationService = authenticationService;
-    System.out.println("was in constructor ");
+
   }
 
   @PostConstruct
   private void init() {
-    System.out.println("was in init ");
     try {
       TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
       botsApi.registerBot(this);
@@ -47,18 +46,15 @@ public class TelegramAbilityBot extends AbilityBot {
 
   @Override
   public long creatorId() {
-    System.out.println("was in creatorId ");
     return 1L;
   }
 
   @Override
   public String getBotToken() {
-    System.out.println("was in getBotToken ");
     return botConfig.getBotToken();
   }
 
   public Ability start() {
-    System.out.println("was in start ");
     return Ability.builder()
         .name("start")
         .info("Welcome message")
@@ -72,7 +68,6 @@ public class TelegramAbilityBot extends AbilityBot {
   }
 
   public Ability login() {
-    System.out.println("was in login ");
     return Ability.builder()
         .name("login")
         .info("Login ability")
@@ -86,7 +81,6 @@ public class TelegramAbilityBot extends AbilityBot {
   }
 
   public Ability cancel() {
-    System.out.println("was in cancel ");
     return Ability.builder()
         .name("cancel")
         .info("Cancel current operation")
@@ -112,7 +106,6 @@ public class TelegramAbilityBot extends AbilityBot {
 
   @Override
   public void onUpdateReceived(Update update) {
-    System.out.println("was in onUpdateReceived ");
     String message = update.getMessage().getText();
     Long chatId = update.getMessage().getChatId();
 
