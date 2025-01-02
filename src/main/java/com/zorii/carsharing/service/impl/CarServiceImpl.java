@@ -73,4 +73,9 @@ public class CarServiceImpl implements CarService {
         Car updatedCar = carRepository.save(car);
         return carMapper.toResponseDto(updatedCar);
     }
+
+    @Override
+    public String getCarName(Car car) {
+        return String.format("%s %s %s", car.getBrand(), car.getModel(), car.getType());
+    }
 }
