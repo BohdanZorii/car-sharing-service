@@ -12,6 +12,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface PaymentMapper {
   @Mapping(target = "rental", source = "rental")
+  @Mapping(target = "id", ignore = true)
   Payment toEntity(Type type, Rental rental, URL sessionUrl, String sessionId, BigDecimal amountToPay);
 
   PaymentSessionResponseDto toDto(Payment payment);
