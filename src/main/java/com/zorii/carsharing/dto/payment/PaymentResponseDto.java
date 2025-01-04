@@ -1,5 +1,16 @@
 package com.zorii.carsharing.dto.payment;
 
-public record PaymentResponseDto() {
+import com.zorii.carsharing.model.Payment;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.UUID;
 
+public record PaymentResponseDto(
+    UUID id,
+    Payment.Status status,
+    Payment.Type type,
+    URL sessionUrl,
+    String sessionId,
+    BigDecimal amountToPay
+) {
 }

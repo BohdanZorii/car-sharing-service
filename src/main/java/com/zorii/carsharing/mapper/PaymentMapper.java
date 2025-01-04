@@ -1,6 +1,6 @@
 package com.zorii.carsharing.mapper;
 
-import com.zorii.carsharing.dto.payment.PaymentSessionResponseDto;
+import com.zorii.carsharing.dto.payment.PaymentResponseDto;
 import com.zorii.carsharing.model.Payment;
 import com.zorii.carsharing.model.Payment.Type;
 import com.zorii.carsharing.model.Rental;
@@ -15,5 +15,5 @@ public interface PaymentMapper {
   @Mapping(target = "id", ignore = true)
   Payment toEntity(Type type, Rental rental, URL sessionUrl, String sessionId, BigDecimal amountToPay);
 
-  PaymentSessionResponseDto toDto(Payment payment);
+  PaymentResponseDto toDto(Payment payment);
 }

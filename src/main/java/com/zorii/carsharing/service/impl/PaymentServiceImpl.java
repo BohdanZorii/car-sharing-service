@@ -3,7 +3,6 @@ package com.zorii.carsharing.service.impl;
 import com.stripe.model.checkout.Session;
 import com.zorii.carsharing.dto.payment.PaymentRequestDto;
 import com.zorii.carsharing.dto.payment.PaymentResponseDto;
-import com.zorii.carsharing.dto.payment.PaymentSessionResponseDto;
 import com.zorii.carsharing.dto.payment.StripeSessionCreationDto;
 import com.zorii.carsharing.mapper.PaymentMapper;
 import com.zorii.carsharing.model.Payment;
@@ -41,12 +40,14 @@ public class PaymentServiceImpl implements PaymentService {
 
   @Override
   public List<PaymentResponseDto> getPaymentsByUserId(UUID userId) {
-    return null;
+    return paymentRepository.findByRentalUserId(userId).stream()
+        .map(paymentMapper::toDto)
+        .toList();
   }
 
   @Override
   @Transactional
-  public PaymentSessionResponseDto createPaymentSession(PaymentRequestDto paymentRequestDto) {
+  public PaymentResponseDto createPaymentSession(PaymentRequestDto paymentRequestDto) {
     Rental rental = rentalService.getRentalById(paymentRequestDto.rentalId());
     Type paymentType = Type.valueOf(paymentRequestDto.paymentType());
 
