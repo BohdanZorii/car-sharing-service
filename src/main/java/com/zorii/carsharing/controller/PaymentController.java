@@ -2,17 +2,19 @@ package com.zorii.carsharing.controller;
 
 import com.zorii.carsharing.dto.payment.PaymentRequestDto;
 import com.zorii.carsharing.dto.payment.PaymentResponseDto;
-import com.zorii.carsharing.dto.payment.PaymentSessionResponseDto;
+import com.zorii.carsharing.model.User;
+import com.zorii.carsharing.security.CustomUserDetailsService;
 import com.zorii.carsharing.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentController {
 
   private final PaymentService paymentService;
+  private final CustomUserDetailsService userDetailsService;
 
   @Operation(summary = "Get payments for a user",
       responses = {
@@ -34,8 +37,9 @@ public class PaymentController {
           @ApiResponse(responseCode = "404", description = "User not found")
       })
   @GetMapping
-  public ResponseEntity<List<PaymentResponseDto>> getPayments(@RequestParam UUID userId) {
-    List<PaymentResponseDto> payments = paymentService.getPaymentsByUserId(userId);
+  public ResponseEntity<List<PaymentResponseDto>> getPayments(@AuthenticationPrincipal UserDetails userDetails) {
+    User user = (User) userDetailsService.loadUserByUsername(userDetails.getUsername());
+    List<PaymentResponseDto> payments = paymentService.getPaymentsByUserId(user.getId());
     return ResponseEntity.ok(payments);
   }
 
@@ -45,9 +49,9 @@ public class PaymentController {
           @ApiResponse(responseCode = "400", description = "Invalid request data")
       })
   @PostMapping
-  public ResponseEntity<PaymentSessionResponseDto> createPaymentSession(
+  public ResponseEntity<PaymentResponseDto> createPaymentSession(
       @Valid @RequestBody PaymentRequestDto paymentRequestDto) {
-    PaymentSessionResponseDto session = paymentService.createPaymentSession(paymentRequestDto);
+    PaymentResponseDto session = paymentService.createPaymentSession(paymentRequestDto);
     return ResponseEntity.status(HttpStatus.CREATED).body(session);
   }
 
