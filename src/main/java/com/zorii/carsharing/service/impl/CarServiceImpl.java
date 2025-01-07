@@ -28,10 +28,8 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<CarResponseDto> getAllCars() {
-        return carRepository.findAll()
-                .stream()
-                .map(carMapper::toResponseDto)
-                .toList();
+        List<Car> cars = carRepository.findAll();
+        return carMapper.toResponseDtoList(cars);
     }
 
     @Override

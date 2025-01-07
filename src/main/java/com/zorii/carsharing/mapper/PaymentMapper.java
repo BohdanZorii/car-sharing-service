@@ -6,6 +6,7 @@ import com.zorii.carsharing.model.Payment.Type;
 import com.zorii.carsharing.model.Rental;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -16,4 +17,6 @@ public interface PaymentMapper {
   Payment toEntity(Type type, Rental rental, URL sessionUrl, String sessionId, BigDecimal amountToPay);
 
   PaymentResponseDto toDto(Payment payment);
+
+  List<PaymentResponseDto> toResponseDtoList(List<Payment> rentals);
 }

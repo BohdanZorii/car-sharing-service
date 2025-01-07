@@ -40,9 +40,8 @@ public class PaymentServiceImpl implements PaymentService {
 
   @Override
   public List<PaymentResponseDto> getPaymentsByUserId(UUID userId) {
-    return paymentRepository.findByRentalUserId(userId).stream()
-        .map(paymentMapper::toDto)
-        .toList();
+    List<Payment> payments = paymentRepository.findByRentalUserId(userId);
+    return paymentMapper.toResponseDtoList(payments);
   }
 
   @Transactional

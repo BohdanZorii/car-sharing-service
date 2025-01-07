@@ -59,9 +59,7 @@ public class RentalServiceImpl implements RentalService {
         List<Rental> rentals = isActive
             ? rentalRepository.findByUserIdAndActualReturnDateIsNull(userId)
             : rentalRepository.findByUserIdAndActualReturnDateIsNotNull(userId);
-        return rentals.stream()
-            .map(rentalMapper::toResponseDto)
-            .toList();
+        return rentalMapper.toResponseDtoList(rentals);
     }
 
     @Override
