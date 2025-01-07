@@ -87,7 +87,7 @@ public class CarServiceTest {
     @DisplayName("Get all cars")
     void getAllCars_ReturnsListOfResponseDtos() {
         when(carRepository.findAll()).thenReturn(List.of(car));
-        when(carMapper.toResponseDto(car)).thenReturn(carResponseDto);
+        when(carMapper.toResponseDtoList(List.of(car))).thenReturn(List.of(carResponseDto));
 
         List<CarResponseDto> actual = carService.getAllCars();
 
