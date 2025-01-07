@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserService {
   private final UserMapper userMapper;
   private final PasswordEncoder passwordEncoder;
 
+  @Transactional
   @Override
   public UserResponseDto registerUser(UserRegistrationDto dto) {
     if (userRepository.existsByEmail(dto.email())) {
@@ -36,7 +37,6 @@ public class UserServiceImpl implements UserService {
     return userMapper.toResponseDto(savedUser);
   }
 
-  @Transactional(readOnly = true)
   @Override
   public UserResponseDto getUserProfile(String email) {
     User user = userRepository.findByEmail(email)

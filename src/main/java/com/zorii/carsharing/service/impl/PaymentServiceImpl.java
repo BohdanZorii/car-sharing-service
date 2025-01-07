@@ -40,13 +40,12 @@ public class PaymentServiceImpl implements PaymentService {
 
   @Override
   public List<PaymentResponseDto> getPaymentsByUserId(UUID userId) {
-    return paymentRepository.findByRentalUserId(userId).stream()
-        .map(paymentMapper::toDto)
-        .toList();
+    List<Payment> payments = paymentRepository.findByRentalUserId(userId);
+    return paymentMapper.toResponseDtoList(payments);
   }
 
-  @Override
   @Transactional
+  @Override
   public PaymentResponseDto createPaymentSession(PaymentRequestDto paymentRequestDto) {
     Rental rental = rentalService.getRentalById(paymentRequestDto.rentalId());
     Type paymentType = Type.valueOf(paymentRequestDto.paymentType());
@@ -60,6 +59,7 @@ public class PaymentServiceImpl implements PaymentService {
     return paymentMapper.toDto(payment);
   }
 
+  @Transactional
   @Override
   public void processSuccessfulPayment(String sessionId) {
     Payment payment = getPaymentBySessionId(sessionId);
@@ -74,6 +74,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
   }
 
+  @Transactional
   @Override
   public void handlePaymentCancellation(String sessionId) {
     Payment payment = getPaymentBySessionId(sessionId);

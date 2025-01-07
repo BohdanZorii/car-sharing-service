@@ -95,14 +95,14 @@ class PaymentServiceTest {
     @Test
     void getPaymentsByUserId_ShouldReturnPayments() {
         when(paymentRepository.findByRentalUserId(userId)).thenReturn(List.of(payment));
-        when(paymentMapper.toDto(payment)).thenReturn(paymentResponseDto);
+        when(paymentMapper.toResponseDtoList(List.of(payment))).thenReturn(List.of(paymentResponseDto));
 
         List<PaymentResponseDto> payments = paymentService.getPaymentsByUserId(userId);
 
         assertEquals(1, payments.size());
         assertEquals(paymentResponseDto, payments.get(0));
         verify(paymentRepository).findByRentalUserId(userId);
-        verify(paymentMapper).toDto(payment);
+        verify(paymentMapper).toResponseDtoList(List.of(payment));
     }
 
     @Test

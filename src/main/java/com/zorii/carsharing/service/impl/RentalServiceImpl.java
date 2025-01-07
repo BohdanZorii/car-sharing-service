@@ -59,9 +59,7 @@ public class RentalServiceImpl implements RentalService {
         List<Rental> rentals = isActive
             ? rentalRepository.findByUserIdAndActualReturnDateIsNull(userId)
             : rentalRepository.findByUserIdAndActualReturnDateIsNotNull(userId);
-        return rentals.stream()
-            .map(rentalMapper::toResponseDto)
-            .toList();
+        return rentalMapper.toResponseDtoList(rentals);
     }
 
     @Override
@@ -72,14 +70,13 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Rental getRentalById(UUID id) {
         return rentalRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Rental not found with id " + id));
     }
 
-    @Override
     @Transactional
+    @Override
     public RentalResponseDto returnRental(UUID id, String email) {
         Rental rental = getRentalById(id);
 
