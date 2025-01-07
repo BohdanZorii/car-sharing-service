@@ -72,14 +72,13 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Rental getRentalById(UUID id) {
         return rentalRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Rental not found with id " + id));
     }
 
-    @Override
     @Transactional
+    @Override
     public RentalResponseDto returnRental(UUID id, String email) {
         Rental rental = getRentalById(id);
 
