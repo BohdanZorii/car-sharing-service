@@ -18,5 +18,5 @@ public interface PaymentMapper {
 
   PaymentResponseDto toDto(Payment payment);
 
-  List<PaymentResponseDto> toResponseDtoList(List<Payment> rentals);
+  List<PaymentResponseDto> toResponseDtoList(List<Payment> payments);
 }
