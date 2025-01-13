@@ -1,5 +1,6 @@
 package com.zorii.carsharing.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -7,11 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.UUID;
 import lombok.Getter;
@@ -26,24 +22,20 @@ public class Car {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
-  @NotBlank(message = "Model cannot be blank")
-  @Size(min = 1, max = 100, message = "Model must be between 1 and 100 characters")
+  @Column(nullable = false, length = 100)
   private String model;
 
-  @NotBlank(message = "Brand cannot be blank")
-  @Size(min = 1, max = 100, message = "Brand must be between 1 and 100 characters")
+  @Column(nullable = false, length = 100)
   private String brand;
 
-  @NotNull(message = "Type cannot be null")
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private Type type;
 
-  @NotNull(message = "Inventory cannot be null")
-  @PositiveOrZero(message = "Inventory must be a positive  or zero")
+  @Column(nullable = false)
   private int inventory;
 
-  @NotNull(message = "Daily fee cannot be null")
-  @Positive(message = "Daily fee must be a positive value")
+  @Column(nullable = false, precision = 19, scale = 2)
   private BigDecimal dailyFee;
 
   public enum Type {
