@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RentalServiceImpl implements RentalService {
 
     private final RentalRepository rentalRepository;
@@ -29,7 +30,6 @@ public class RentalServiceImpl implements RentalService {
     private final RentalMapper rentalMapper;
     private final NotificationService notificationService;
 
-    @Transactional
     @Override
     public RentalResponseDto addRental(RentalRequestDto rentalRequestDto, String email) {
         User user = userRepository.findByEmail(email)
@@ -54,6 +54,7 @@ public class RentalServiceImpl implements RentalService {
         return rentalMapper.toResponseDto(savedRental);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<RentalResponseDto> getRentals(UUID userId, boolean isActive) {
         List<Rental> rentals = isActive
@@ -62,6 +63,7 @@ public class RentalServiceImpl implements RentalService {
         return rentalMapper.toResponseDtoList(rentals);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public RentalResponseDto getRental(UUID id, String email) {
         Rental rental = rentalRepository.findByIdAndUserEmail(id, email)
@@ -69,13 +71,13 @@ public class RentalServiceImpl implements RentalService {
         return rentalMapper.toResponseDto(rental);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Rental getRentalById(UUID id) {
         return rentalRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Rental not found with id " + id));
     }
 
-    @Transactional
     @Override
     public RentalResponseDto returnRental(UUID id, String email) {
         Rental rental = getRentalById(id);

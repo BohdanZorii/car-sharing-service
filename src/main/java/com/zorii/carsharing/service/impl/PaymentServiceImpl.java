@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PaymentServiceImpl implements PaymentService {
 
   private final PaymentRepository paymentRepository;
@@ -38,13 +39,13 @@ public class PaymentServiceImpl implements PaymentService {
   private final RentalService rentalService;
   private final CarService carService;
 
+  @Transactional(readOnly = true)
   @Override
   public List<PaymentResponseDto> getPaymentsByUserId(UUID userId) {
     List<Payment> payments = paymentRepository.findByRentalUserId(userId);
     return paymentMapper.toResponseDtoList(payments);
   }
 
-  @Transactional
   @Override
   public PaymentResponseDto createPaymentSession(PaymentRequestDto paymentRequestDto) {
     Rental rental = rentalService.getRentalById(paymentRequestDto.rentalId());
@@ -59,7 +60,6 @@ public class PaymentServiceImpl implements PaymentService {
     return paymentMapper.toDto(payment);
   }
 
-  @Transactional
   @Override
   public void processSuccessfulPayment(String sessionId) {
     Payment payment = getPaymentBySessionId(sessionId);
@@ -74,7 +74,6 @@ public class PaymentServiceImpl implements PaymentService {
     }
   }
 
-  @Transactional
   @Override
   public void handlePaymentCancellation(String sessionId) {
     Payment payment = getPaymentBySessionId(sessionId);

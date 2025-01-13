@@ -19,13 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
   private final UserMapper userMapper;
   private final PasswordEncoder passwordEncoder;
 
-  @Transactional
   @Override
   public UserResponseDto registerUser(UserRegistrationDto dto) {
     if (userRepository.existsByEmail(dto.email())) {
@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService {
     return userMapper.toResponseDto(savedUser);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public UserResponseDto getUserProfile(String email) {
     User user = userRepository.findByEmail(email)
@@ -44,7 +45,6 @@ public class UserServiceImpl implements UserService {
     return userMapper.toResponseDto(user);
   }
 
-  @Transactional
   @Override
   public UserResponseDto updateUserProfile(String email, UserUpdateDto dto) {
     User user = userRepository.findByEmail(email)
@@ -53,7 +53,6 @@ public class UserServiceImpl implements UserService {
     return userMapper.toResponseDto(user);
   }
 
-  @Transactional
   @Override
   public UserResponseDto updateUserRole(UUID id, RoleDto dto) {
     User user = userRepository.findById(id)
