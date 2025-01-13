@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CarServiceImpl implements CarService {
     private final CarRepository carRepository;
     private final CarMapper carMapper;
@@ -26,12 +27,14 @@ public class CarServiceImpl implements CarService {
         return carMapper.toResponseDto(savedCar);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<CarResponseDto> getAllCars() {
         List<Car> cars = carRepository.findAll();
         return carMapper.toResponseDtoList(cars);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public CarResponseDto getCarById(UUID id) {
         Car car = carRepository.findById(id)
@@ -39,7 +42,6 @@ public class CarServiceImpl implements CarService {
         return carMapper.toResponseDto(car);
     }
 
-    @Transactional
     @Override
     public CarResponseDto updateCar(UUID id, CarRequestDto carRequestDto) {
         Car car = carRepository.findById(id)
@@ -51,7 +53,6 @@ public class CarServiceImpl implements CarService {
         return carMapper.toResponseDto(updatedCar);
     }
 
-    @Transactional
     @Override
     public void deleteCar(UUID id) {
         if (!carRepository.existsById(id)) {
