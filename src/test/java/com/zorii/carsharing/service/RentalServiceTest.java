@@ -108,6 +108,11 @@ class RentalServiceTest {
 
         assertNotNull(result);
         assertEquals(mockRental.getId(), result.id());
+        verify(userRepository, times(1)).findByEmail(mockUser.getEmail());
+        verify(carRepository, times(1)).findById(mockCar.getId());
+        verify(rentalMapper, times(1)).toEntity(mockRentalRequestDto, mockUser, mockCar);
+        verify(rentalRepository, times(1)).save(any(Rental.class));
+        verify(rentalMapper, times(1)).toResponseDto(mockRental);
         verify(notificationService, times(1)).sendNotification(anyString(), eq(mockUser.getTelegramChatId()));
     }
 
@@ -121,6 +126,8 @@ class RentalServiceTest {
             rentalService.addRental(mockRentalRequestDto, mockUser.getEmail()));
 
         assertEquals("Car is not available", exception.getMessage());
+        verify(userRepository, times(1)).findByEmail(mockUser.getEmail());
+        verify(carRepository, times(1)).findById(mockCar.getId());
     }
 
     @Test
@@ -139,6 +146,8 @@ class RentalServiceTest {
 
         assertNotNull(result);
         assertEquals(mockRental.getId(), result.id());
+        verify(rentalRepository, times(1)).findByIdAndUserEmail(mockRental.getId(), mockUser.getEmail());
+        verify(rentalMapper, times(1)).toResponseDto(mockRental);
     }
 
     @Test
@@ -150,6 +159,7 @@ class RentalServiceTest {
             rentalService.getRental(mockRental.getId(), mockUser.getEmail()));
 
         assertEquals("Rental not found with id " + mockRental.getId(), exception.getMessage());
+        verify(rentalRepository, times(1)).findByIdAndUserEmail(mockRental.getId(), mockUser.getEmail());
     }
 
     @Test
@@ -168,6 +178,9 @@ class RentalServiceTest {
 
         assertNotNull(result);
         assertEquals(LocalDate.now(), result.actualReturnDate());
+        verify(rentalRepository, times(1)).findById(mockRental.getId());
+        verify(rentalRepository, times(1)).save(any(Rental.class));
+        verify(rentalMapper, times(1)).toResponseDto(mockRental);
         verify(notificationService, times(1)).sendNotification(anyString(), eq(mockUser.getTelegramChatId()));
     }
 
@@ -180,5 +193,6 @@ class RentalServiceTest {
             rentalService.returnRental(mockRental.getId(), mockUser.getEmail()));
 
         assertEquals("Rental has already been returned", exception.getMessage());
+        verify(rentalRepository, times(1)).findById(mockRental.getId());
     }
 }

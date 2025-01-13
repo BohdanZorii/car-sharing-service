@@ -80,7 +80,9 @@ public class CarServiceTest {
         CarResponseDto actual = carService.addCar(carRequestDto);
 
         assertEquals(carResponseDto, actual);
+        verify(carMapper, times(1)).toEntity(carRequestDto);
         verify(carRepository, times(1)).save(car);
+        verify(carMapper, times(1)).toResponseDto(car);
     }
 
     @Test
@@ -93,6 +95,8 @@ public class CarServiceTest {
 
         assertEquals(1, actual.size());
         assertEquals(carResponseDto, actual.get(0));
+        verify(carRepository, times(1)).findAll();
+        verify(carMapper, times(1)).toResponseDtoList(List.of(car));
     }
 
     @Test
@@ -104,6 +108,8 @@ public class CarServiceTest {
         CarResponseDto actual = carService.getCarById(car.getId());
 
         assertEquals(carResponseDto, actual);
+        verify(carRepository, times(1)).findById(car.getId());
+        verify(carMapper, times(1)).toResponseDto(car);
     }
 
     @Test
@@ -114,6 +120,7 @@ public class CarServiceTest {
         Exception ex = assertThrows(EntityNotFoundException.class, () -> carService.getCarById(car.getId()));
 
         assertEquals("Car not found with ID: " + car.getId(), ex.getMessage());
+        verify(carRepository, times(1)).findById(car.getId());
     }
 
     @Test
@@ -127,7 +134,10 @@ public class CarServiceTest {
         CarResponseDto actual = carService.updateCar(car.getId(), carRequestDto);
 
         assertEquals(carResponseDto, actual);
+        verify(carRepository, times(1)).findById(car.getId());
+        verify(carMapper, times(1)).toEntity(carRequestDto);
         verify(carRepository, times(1)).save(car);
+        verify(carMapper, times(1)).toResponseDto(car);
     }
 
     @Test
@@ -138,6 +148,7 @@ public class CarServiceTest {
 
         carService.deleteCar(car.getId());
 
+        verify(carRepository, times(1)).existsById(car.getId());
         verify(carRepository, times(1)).deleteById(car.getId());
     }
 
@@ -149,6 +160,7 @@ public class CarServiceTest {
         Exception ex = assertThrows(EntityNotFoundException.class, () -> carService.deleteCar(car.getId()));
 
         assertEquals("Car not found with ID: " + car.getId(), ex.getMessage());
+        verify(carRepository, times(1)).existsById(car.getId());
     }
 
     @Test
@@ -161,7 +173,9 @@ public class CarServiceTest {
         CarResponseDto actual = carService.updateInventory(car.getId(), 5);
 
         assertEquals(carResponseDto, actual);
+        verify(carRepository, times(1)).findById(car.getId());
         verify(carRepository, times(1)).save(car);
+        verify(carMapper, times(1)).toResponseDto(car);
     }
 
     @Test
@@ -172,6 +186,7 @@ public class CarServiceTest {
         Exception ex = assertThrows(IllegalArgumentException.class, () -> carService.updateInventory(car.getId(), -15));
 
         assertEquals("Inventory cannot be negative", ex.getMessage());
+        verify(carRepository, times(1)).findById(car.getId());
     }
 
     @Test
