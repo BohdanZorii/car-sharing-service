@@ -13,15 +13,15 @@ This project leverages a robust set of technologies and frameworks, including:
 - **Spring Security** – Handles authentication and authorization.
 - **Spring Data JPA** – Manages data persistence with a database.
 - **Spring Validation** – Validates user input with custom annotations.
-- **JWT (JSON Web Tokens)** – Ensures secure user authentication.
-- **Stripe** – Facilitates online payments.
-- **Telegram API** – Sends notifications to administrators.
+- **JWT (JSON Web Tokens)** – Ensures secure user authentication (`jjwt` version 0.11.5).
+- **Stripe** – Facilitates online payments (version 28.2.0).
+- **Telegram API** – Sends notifications to administrators (version 6.7.0).
 - **Docker** – Containerizes the application for easy deployment.
 - **Scheduled Tasks** – Automates tasks like checking for overdue rentals.
 - **Swagger** – Provides interactive API documentation.
 - **Testcontainers** – Supports integration testing with Docker containers.
 - **Global Exception Handling** – Centralized error handling for the application.
-- **MapStruct** – Simplifies mapping between DTOs and entities.
+- **MapStruct** – Simplifies mapping between DTOs and entities (version 1.6.0).
 
 These technologies ensure a secure, efficient, and user-friendly car sharing management system.
 
