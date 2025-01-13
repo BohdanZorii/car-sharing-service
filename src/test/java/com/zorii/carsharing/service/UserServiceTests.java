@@ -3,6 +3,7 @@ package com.zorii.carsharing.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -87,7 +88,11 @@ public class UserServiceTests {
     UserResponseDto actual = userService.registerUser(registrationDto);
 
     assertEquals(responseDto, actual);
+    verify(userRepository, times(1)).existsByEmail(registrationDto.email());
+    verify(userMapper, times(1)).toEntity(registrationDto);
+    verify(passwordEncoder, times(1)).encode(registrationDto.password());
     verify(userRepository, times(1)).save(user);
+    verify(userMapper, times(1)).toResponseDto(user);
   }
 
   @Test
@@ -98,6 +103,10 @@ public class UserServiceTests {
     assertThrows(DuplicateEmailException.class, () -> userService.registerUser(registrationDto));
 
     verify(userRepository, never()).save(any(User.class));
+    verify(userRepository, times(1)).existsByEmail(registrationDto.email());
+    verify(userRepository, never()).save(any(User.class));
+    verify(userMapper, never()).toEntity(any(UserRegistrationDto.class));
+    verify(passwordEncoder, never()).encode(anyString());
   }
 
   @Test
@@ -109,6 +118,8 @@ public class UserServiceTests {
     UserResponseDto actual = userService.getUserProfile(user.getEmail());
 
     assertEquals(responseDto, actual);
+    verify(userRepository, times(1)).findByEmail(user.getEmail());
+    verify(userMapper, times(1)).toResponseDto(user);
   }
 
   @Test
@@ -117,6 +128,8 @@ public class UserServiceTests {
     when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
 
     assertThrows(EntityNotFoundException.class, () -> userService.getUserProfile(user.getEmail()));
+    verify(userRepository, times(1)).findByEmail(user.getEmail());
+    verify(userMapper, never()).toResponseDto(any(User.class));
   }
 
   @Test
@@ -131,7 +144,9 @@ public class UserServiceTests {
     UserResponseDto actual = userService.updateUserProfile(user.getEmail(), updateDto);
 
     assertEquals(responseDto, actual);
+    verify(userRepository, times(1)).findByEmail(user.getEmail());
     verify(userMapper, times(1)).updateUserFromDto(updateDto, user);
+    verify(userMapper, times(1)).toResponseDto(user);
   }
 
   @Test
@@ -146,6 +161,8 @@ public class UserServiceTests {
 
     assertEquals(responseDto, actual);
     assertEquals(User.Role.MANAGER, user.getRole());
+    verify(userRepository, times(1)).findById(user.getId());
+    verify(userMapper, times(1)).toResponseDto(user);
   }
 
   @Test
@@ -157,5 +174,6 @@ public class UserServiceTests {
 
     assertThrows(EntityNotFoundException.class,
         () -> userService.updateUserRole(user.getId(), roleDto));
+    verify(userRepository, times(1)).findById(user.getId());
   }
 }

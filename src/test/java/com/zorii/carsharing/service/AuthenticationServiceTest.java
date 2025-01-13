@@ -75,6 +75,8 @@ public class AuthenticationServiceTest {
         UserLoginResponseDto actual = authenticationService.authenticate(loginRequestDto);
 
         assertEquals(loginResponseDto.token(), actual.token());
+        verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        verify(jwtUtil, times(1)).generateToken(user.getEmail());
     }
 
     @Test
@@ -86,6 +88,7 @@ public class AuthenticationServiceTest {
         authenticationService.authenticateWithTelegram(loginRequestDto, 123456789L);
 
         assertEquals(123456789L, user.getTelegramChatId());
+        verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
         verify(userRepository, times(1)).save(user);
     }
 
@@ -98,5 +101,6 @@ public class AuthenticationServiceTest {
             () -> authenticationService.authenticate(loginRequestDto));
 
         assertEquals("Bad credentials", exception.getMessage());
+        verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
     }
 }
